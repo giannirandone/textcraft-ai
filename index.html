@@ -20,20 +20,6 @@
         </header>
 
         <main class="main-content">
-            <!-- Eingabefeld -->
-            <div class="text-section input-section">
-                <div class="section-header">
-                    <h2>Eingabe</h2>
-                    <span class="char-count" id="inputCharCount">0 Zeichen</span>
-                </div>
-                <textarea 
-                    id="inputText" 
-                    class="text-area" 
-                    placeholder="Geben Sie hier Ihren Text ein..."
-                    rows="8"
-                ></textarea>
-            </div>
-
             <!-- Reiter-System für Optionen -->
             <div class="options-panel">
                 <div class="tabs-container">
@@ -54,47 +40,66 @@
                     <div class="tab-section">
                         <h3 class="tab-title">Textstil</h3>
                         <div class="tab-buttons">
-                            <button class="tab-btn" data-mode="formal" data-tab="2">
-                                👔 Formal
+                            <button class="tab-btn tab-btn-icon" data-mode="formal" data-tab="2" data-tooltip="Formal">
+                                👔
                             </button>
-                            <button class="tab-btn" data-mode="casual" data-tab="2">
-                                😊 Freundlich
+                            <button class="tab-btn tab-btn-icon" data-mode="casual" data-tab="2" data-tooltip="Freundlich">
+                                😊
                             </button>
-                            <button class="tab-btn" data-mode="professional" data-tab="2">
-                                💼 Professionell
+                            <button class="tab-btn tab-btn-icon" data-mode="professional" data-tab="2" data-tooltip="Professionell">
+                                💼
                             </button>
-                            <button class="tab-btn" data-mode="creative" data-tab="2">
-                                🎨 Kreativ
+                            <button class="tab-btn tab-btn-icon" data-mode="creative" data-tab="2" data-tooltip="Kreativ">
+                                🎨
                             </button>
-                            <button class="tab-btn" data-mode="simple" data-tab="2">
-                                📖 Einfach
+                            <button class="tab-btn tab-btn-icon" data-mode="simple" data-tab="2" data-tooltip="Einfach">
+                                📖
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <button id="processBtn" class="process-btn" disabled>
-                    <span class="btn-text">Text verarbeiten</span>
-                    <span class="btn-loader hidden">⏳ Verarbeitung...</span>
-                </button>
             </div>
 
-            <!-- Ausgabefeld -->
-            <div class="text-section output-section">
-                <div class="section-header">
-                    <h2>Ausgabe</h2>
-                    <button id="copyBtn" class="copy-btn" disabled>
-                        📋 Kopieren
-                    </button>
+            <!-- Textfelder nebeneinander -->
+            <div class="text-fields-container">
+                <!-- Eingabefeld -->
+                <div class="text-section input-section">
+                    <div class="section-header">
+                        <h2>Eingabe</h2>
+                        <span class="char-count" id="inputCharCount">0 Zeichen</span>
+                    </div>
+                    <textarea 
+                        id="inputText" 
+                        class="text-area" 
+                        placeholder="Geben Sie hier Ihren Text ein..."
+                        rows="8"
+                    ></textarea>
                 </div>
-                <div id="outputText" class="text-area output-area" contenteditable="false">
-                    <p class="placeholder-text">Hier erscheint der optimierte Text...</p>
+
+                <!-- Button zwischen den Feldern -->
+                <button id="processBtn" class="process-btn-center" disabled>
+                    <span class="btn-icon">➜</span>
+                </button>
+
+                <!-- Ausgabefeld -->
+                <div class="text-section output-section">
+                    <div class="section-header">
+                        <h2>Ausgabe</h2>
+                    </div>
+                    <div class="output-wrapper">
+                        <div id="outputText" class="text-area output-area" contenteditable="false">
+                            <p class="placeholder-text">Hier erscheint der optimierte Text...</p>
+                        </div>
+                        <button id="copyBtn" class="copy-btn-icon" data-tooltip="Kopieren" disabled>
+                            📋
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>
 
         <footer class="footer">
-            <p>Powered by AI • Made with ❤️</p>
+            <p>Gianni was here • Made with ❤️</p>
         </footer>
     </div>
 
