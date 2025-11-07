@@ -8,6 +8,18 @@ export const CONFIG = {
     MODEL: 'gpt-3.5-turbo',
     MAX_TOKENS: 2000,
     TEMPERATURE: 0.7,
+    
+    // UI Configuration
+    UI: {
+        ANIMATION_DURATION: 300, // ms
+        COPY_FEEDBACK_DURATION: 2000, // ms
+        API_SIMULATION_DELAY: 1500, // ms
+        BUTTON_SIZES: {
+            ICON: 44,
+            PROCESS_CENTER: 60,
+            COPY_ICON: 40,
+        },
+    },
 };
 
 // Text-Modi mit entsprechenden Prompts
@@ -44,4 +56,53 @@ export const TEXT_MODES = {
 
 // System Prompt für bessere Ergebnisse
 export const SYSTEM_PROMPT = 'Du bist ein professioneller Textoptimierungs-Assistent. Du hilfst Nutzern dabei, ihre Texte zu verbessern, zu optimieren und in verschiedene Stile umzuformulieren. Antworte immer nur mit dem optimierten Text, ohne zusätzliche Erklärungen oder Kommentare.';
+
+// UI Text Constants
+export const UI_TEXTS = {
+    PLACEHOLDER_INPUT: 'Geben Sie hier Ihren Text ein...',
+    PLACEHOLDER_OUTPUT: 'Hier erscheint der optimierte Text...',
+    LOADING_MESSAGE: 'Text wird verarbeitet...',
+    ERROR_PROCESSING: 'Fehler beim Verarbeiten des Textes. Bitte versuchen Sie es erneut.',
+    ERROR_COPY: 'Kopieren fehlgeschlagen. Bitte manuell kopieren.',
+    CHAR_COUNT: (count) => `${count} Zeichen`,
+};
+
+// Simulierte Antworten für Demo-Zwecke
+export function generateSimulatedResponse(mode, text) {
+    const responses = {
+        summarize: `Zusammenfassung: ${text.substring(
+            0,
+            Math.min(100, text.length)
+        )}...`,
+        correct: text
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" "),
+        formal: `Sehr geehrte Damen und Herren,\n\n${text}\n\nMit freundlichen Grüßen`,
+        casual: `Hey! 👋\n\n${text}\n\nViele Grüße! 😊`,
+        professional: `Betreff: ${text.substring(0, 50)}...\n\n${text}`,
+        creative: `✨ ${text
+            .split("")
+            .map((char, i) => (i % 2 === 0 ? char.toUpperCase() : char))
+            .join("")} ✨`,
+        simple: text.toLowerCase().replace(/[.,!?]/g, ""),
+    };
+
+    return responses[mode] || text;
+}
+
+// Constants
+export const DEFAULT_MODE = 'summarize';
+export const CSS_CLASSES = {
+    ACTIVE: 'active',
+    HIDDEN: 'hidden',
+    COPIED: 'copied',
+    PLACEHOLDER_TEXT: 'placeholder-text',
+};
+export const DOM_SELECTORS = {
+    TAB_BUTTON: '.tab-btn',
+    TAB_BUTTON_BY_MODE: (mode) => `.tab-btn[data-mode="${mode}"]`,
+    TAB_BUTTON_BY_TAB: (tab) => `[data-tab="${tab}"]`,
+    PLACEHOLDER_TEXT: '.placeholder-text',
+};
 

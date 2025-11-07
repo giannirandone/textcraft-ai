@@ -1,222 +1,138 @@
 // Main Application Logic für TextCraft AI
 
-import { CONFIG, TEXT_MODES, SYSTEM_PROMPT } from "./config.js";
+import { DEFAULT_MODE, UI_TEXTS } from "./config.js";
+import { StateManager } from "./modules/state-manager.js";
+import { ApiService } from "./modules/api-service.js";
+import { UIHandler } from "./modules/ui-handler.js";
 
 class TextCraftApp {
   constructor() {
-    this.currentMode = null;
-    this.inputText = "";
-    this.outputText = "";
-    this.lastProcessedText = null; // Speichert den Text zum Zeitpunkt des letzten Klicks
+    this.state = new StateManager();
+    this.api = new ApiService();
+    this.ui = new UIHandler();
 
     this.init();
   }
 
   init() {
-    // DOM Elements
-    this.inputTextarea = document.getElementById("inputText");
-    this.outputArea = document.getElementById("outputText");
-    this.processBtn = document.getElementById("processBtn");
-    this.copyBtn = document.getElementById("copyBtn");
-    this.inputCharCount = document.getElementById("inputCharCount");
-    this.loadingOverlay = document.getElementById("loadingOverlay");
-
-    // Tab Buttons
-    this.tabButtons = document.querySelectorAll(".tab-btn");
-
-    // Event Listeners
     this.setupEventListeners();
-
-    // Initial State
     this.updateCharCount();
   }
 
   setupEventListeners() {
+    const elements = this.ui.getAllElements();
+
     // Input Textarea
-    this.inputTextarea.addEventListener("input", () => {
-      this.inputText = this.inputTextarea.value;
-      this.updateCharCount();
-      this.updateProcessButton();
+    elements.inputTextarea.addEventListener("input", () => {
+      this.handleInputChange();
     });
 
     // Tab Buttons
-    this.tabButtons.forEach((btn) => {
+    elements.tabButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         this.handleTabClick(btn);
       });
     });
 
     // Process Button
-    this.processBtn.addEventListener("click", () => {
-      this.processText();
+    elements.processBtn.addEventListener("click", () => {
+      this.handleProcessClick();
     });
 
     // Copy Button
-    this.copyBtn.addEventListener("click", () => {
-      this.copyToClipboard();
+    elements.copyBtn.addEventListener("click", () => {
+      this.handleCopyClick();
     });
   }
 
-  updateCharCount() {
-    const count = this.inputTextarea.value.length;
-    this.inputCharCount.textContent = `${count} Zeichen`;
+  handleInputChange() {
+    const elements = this.ui.getAllElements();
+    const inputText = elements.inputTextarea.value;
+
+    this.state.setInputText(inputText);
+    this.updateCharCount();
+    this.updateProcessButton();
   }
 
   handleTabClick(clickedBtn) {
     const mode = clickedBtn.dataset.mode;
-    const tab = clickedBtn.dataset.tab;
 
-    // Deaktiviere alle Buttons im gleichen Tab-Bereich
-    const sameTabButtons = document.querySelectorAll(`[data-tab="${tab}"]`);
-    sameTabButtons.forEach((btn) => btn.classList.remove("active"));
-
-    // Aktiviere geklickten Button
-    clickedBtn.classList.add("active");
-
-    // Setze aktuellen Modus
-    this.currentMode = mode;
-
-    // Update Process Button
+    this.ui.activateTabButton(clickedBtn);
+    this.state.setMode(mode);
     this.updateProcessButton();
   }
 
-  updateProcessButton() {
-    const currentText = this.inputTextarea.value.trim();
-    const hasText = currentText.length > 0;
-    const textChanged = currentText !== this.lastProcessedText;
+  handleProcessClick() {
+    this.processText();
+  }
 
-    // Button disabled wenn: kein Text ODER Text unverändert seit letztem Klick
-    this.processBtn.disabled = !hasText || !textChanged;
+  async handleCopyClick() {
+    await this.copyToClipboard();
+  }
+
+  updateCharCount() {
+    const elements = this.ui.getAllElements();
+    const count = elements.inputTextarea.value.length;
+    this.ui.updateCharCount(count);
+  }
+
+  updateProcessButton() {
+    const elements = this.ui.getAllElements();
+    const currentText = elements.inputTextarea.value.trim();
+
+    this.state.setInputText(currentText);
+    const canProcess = this.state.canProcess();
+    this.ui.updateProcessButtonState(canProcess);
   }
 
   async processText() {
-    const inputText = this.inputTextarea.value.trim();
+    const elements = this.ui.getAllElements();
+    const inputText = elements.inputTextarea.value.trim();
 
     if (!inputText) {
       return;
     }
 
-    // Speichere den Text zum Zeitpunkt des Klicks (vor der Verarbeitung)
-    this.lastProcessedText = inputText;
+    // Speichere den Text zum Zeitpunkt des Klicks
+    this.state.setLastProcessedText(inputText);
 
     // Wenn kein Modus gewählt, verwende Standard-Modus
-    if (!this.currentMode) {
-      this.currentMode = "summarize";
-      // Aktiviere den ersten Button visuell
-      const firstBtn = document.querySelector(
-        '.tab-btn[data-mode="summarize"]'
-      );
-      if (firstBtn) {
-        firstBtn.classList.add("active");
-      }
+    if (!this.state.getMode()) {
+      this.state.setMode(DEFAULT_MODE);
+      this.ui.activateDefaultMode();
     }
 
     // Show Loading
-    this.showLoading(true);
-    this.processBtn.disabled = true;
+    this.ui.showLoading(true);
+    this.ui.updateProcessButtonState(false);
 
     try {
-      const modeConfig = TEXT_MODES[this.currentMode];
-      const optimizedText = await this.callAI(inputText, modeConfig.prompt);
+      const mode = this.state.getMode();
+      const optimizedText = await this.api.processText(inputText, mode);
 
       // Display Result
-      this.displayResult(optimizedText);
-      this.copyBtn.disabled = false;
+      this.state.setOutputText(optimizedText);
+      this.ui.displayResult(optimizedText);
+      this.ui.updateCopyButtonState(true);
     } catch (error) {
       console.error("Error processing text:", error);
-      this.displayError(
-        "Fehler beim Verarbeiten des Textes. Bitte versuchen Sie es erneut."
-      );
+      this.ui.displayError(UI_TEXTS.ERROR_PROCESSING);
     } finally {
-      this.showLoading(false);
-      // Button-Status basierend auf Texteingabe aktualisieren
+      this.ui.showLoading(false);
       this.updateProcessButton();
     }
   }
 
-  async callAI(text, userPrompt) {
-    // TODO: Hier wird später die echte API-Integration implementiert
-    // Für jetzt: Simulierte Antwort für Demo-Zwecke
-
-    // Simuliere API-Call Delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Demo: Simuliere verschiedene Antworten basierend auf Modus
-    return this.simulateAIResponse(text, userPrompt);
-  }
-
-  simulateAIResponse(text, prompt) {
-    // Simulierte Antworten für Demo
-    // In Production wird hier die echte OpenAI API aufgerufen
-
-    const responses = {
-      summarize: `Zusammenfassung: ${text.substring(
-        0,
-        Math.min(100, text.length)
-      )}...`,
-      correct: text
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" "),
-      formal: `Sehr geehrte Damen und Herren,\n\n${text}\n\nMit freundlichen Grüßen`,
-      casual: `Hey! 👋\n\n${text}\n\nViele Grüße! 😊`,
-      professional: `Betreff: ${text.substring(0, 50)}...\n\n${text}`,
-      creative: `✨ ${text
-        .split("")
-        .map((char, i) => (i % 2 === 0 ? char.toUpperCase() : char))
-        .join("")} ✨`,
-      simple: text.toLowerCase().replace(/[.,!?]/g, ""),
-    };
-
-    return responses[this.currentMode] || text;
-  }
-
-  displayResult(text) {
-    this.outputText = text;
-    const outputElement = this.outputArea;
-
-    // Entferne Placeholder
-    const placeholder = outputElement.querySelector(".placeholder-text");
-    if (placeholder) {
-      placeholder.remove();
-    }
-
-    // Setze neuen Text
-    outputElement.textContent = text;
-    outputElement.style.color = "var(--text-primary)";
-  }
-
-  displayError(message) {
-    const outputElement = this.outputArea;
-    outputElement.innerHTML = `<p style="color: var(--error-color);">${message}</p>`;
-  }
-
   async copyToClipboard() {
-    if (!this.outputText) return;
+    const outputText = this.state.getOutputText();
+    if (!outputText) return;
 
     try {
-      await navigator.clipboard.writeText(this.outputText);
-
-      // Visual Feedback
-      const originalIcon = this.copyBtn.innerHTML;
-      this.copyBtn.innerHTML = "✅";
-      this.copyBtn.classList.add("copied");
-
-      setTimeout(() => {
-        this.copyBtn.innerHTML = originalIcon;
-        this.copyBtn.classList.remove("copied");
-      }, 2000);
+      await navigator.clipboard.writeText(outputText);
+      this.ui.showCopyFeedback();
     } catch (error) {
       console.error("Failed to copy:", error);
-      alert("Kopieren fehlgeschlagen. Bitte manuell kopieren.");
-    }
-  }
-
-  showLoading(show) {
-    if (show) {
-      this.loadingOverlay.classList.remove("hidden");
-    } else {
-      this.loadingOverlay.classList.add("hidden");
+      alert(UI_TEXTS.ERROR_COPY);
     }
   }
 }
