@@ -50,6 +50,10 @@ class TextCraftApp {
     const inputText = elements.inputTextarea.value;
 
     this.state.setInputText(inputText);
+    this.state.setOutputText(inputText);
+    this.ui.resetCopyFeedback();
+    this.ui.displayResult(inputText);
+    this.ui.updateCopyButtonState(inputText.length > 0);
     this.updateCharCount();
     this.updateProcessButton();
   }
@@ -87,40 +91,22 @@ class TextCraftApp {
 
   async processText() {
     const elements = this.ui.getAllElements();
-    const inputText = elements.inputTextarea.value.trim();
+    const rawInputText = elements.inputTextarea.value;
+    const trimmedInputText = rawInputText.trim();
 
-    if (!inputText) {
+    if (!trimmedInputText) {
       return;
     }
 
     // Speichere den Text zum Zeitpunkt des Klicks
-    this.state.setLastProcessedText(inputText);
+    this.state.setLastProcessedText(trimmedInputText);
 
-    // Wenn kein Modus gewählt, verwende Standard-Modus
-    if (!this.state.getMode()) {
-      this.state.setMode(DEFAULT_MODE);
-      this.ui.activateDefaultMode();
-    }
-
-    // Show Loading
-    this.ui.showLoading(true);
-    this.ui.updateProcessButtonState(false);
-
-    try {
-      const mode = this.state.getMode();
-      const optimizedText = await this.api.processText(inputText, mode);
-
-      // Display Result
-      this.state.setOutputText(optimizedText);
-      this.ui.displayResult(optimizedText);
-      this.ui.updateCopyButtonState(true);
-    } catch (error) {
-      console.error("Error processing text:", error);
-      this.ui.displayError(UI_TEXTS.ERROR_PROCESSING);
-    } finally {
-      this.ui.showLoading(false);
-      this.updateProcessButton();
-    }
+    // Ergebnis entspricht exakt dem eingegebenen Text
+    this.state.setOutputText(rawInputText);
+    this.ui.displayResult(rawInputText);
+    this.ui.updateCopyButtonState(true);
+    this.ui.showLoading(false);
+    this.updateProcessButton();
   }
 
   async copyToClipboard() {

@@ -53,11 +53,11 @@
                         <h3 class="tab-title">Textstil</h3>
                         <div class="tab-buttons" role="group" aria-label="Textstil-Optionen">
                             <button 
-                                class="tab-btn tab-btn-icon" 
+                                class="tab-btn tab-btn-icon active" 
                                 data-mode="formal" 
                                 data-tab="2" 
                                 data-tooltip="Formal"
-                                aria-pressed="false"
+                                aria-pressed="true"
                                 aria-label="Formaler Textstil"
                             >
                                 👔
@@ -140,18 +140,18 @@
                 <section class="text-section output-section" aria-label="Textausgabe">
                     <div class="section-header">
                         <h2>Ausgabe</h2>
+                        <span class="char-count" id="outputStatus" aria-live="polite"></span>
                     </div>
                     <div class="output-wrapper">
-                        <div 
-                            id="outputText" 
-                            class="text-area output-area" 
-                            contenteditable="false"
-                            role="textbox"
+                        <textarea
+                            id="outputText"
+                            class="text-area output-area"
+                            placeholder="Hier erscheint der optimierte Text..."
+                            rows="8"
                             aria-label="Textausgabefeld"
-                            aria-readonly="true"
-                        >
-                            <p class="placeholder-text">Hier erscheint der optimierte Text...</p>
-                        </div>
+                            aria-describedby="outputStatus"
+                            readonly
+                        ></textarea>
                         <button 
                             id="copyBtn" 
                             class="copy-btn-icon" 

@@ -1,6 +1,12 @@
 // UI Handler für TextCraft AI - DOM-Manipulation und UI-Updates
 
-import { UI_TEXTS, CSS_CLASSES, DOM_SELECTORS, DEFAULT_MODE } from "../config.js";
+import {
+  CONFIG,
+  UI_TEXTS,
+  CSS_CLASSES,
+  DOM_SELECTORS,
+  DEFAULT_MODE,
+} from "../config.js";
 
 export class UIHandler {
   constructor() {
@@ -11,10 +17,11 @@ export class UIHandler {
   initElements() {
     this.elements = {
       inputTextarea: document.getElementById("inputText"),
-      outputArea: document.getElementById("outputText"),
+      outputTextarea: document.getElementById("outputText"),
       processBtn: document.getElementById("processBtn"),
       copyBtn: document.getElementById("copyBtn"),
       inputCharCount: document.getElementById("inputCharCount"),
+      outputStatus: document.getElementById("outputStatus"),
       loadingOverlay: document.getElementById("loadingOverlay"),
       tabButtons: document.querySelectorAll(DOM_SELECTORS.TAB_BUTTON),
     };
@@ -38,6 +45,9 @@ export class UIHandler {
   updateCopyButtonState(enabled) {
     if (this.elements.copyBtn) {
       this.elements.copyBtn.disabled = !enabled;
+      if (enabled) {
+        this.elements.copyBtn.style.display = "";
+      }
     }
   }
 
@@ -66,30 +76,27 @@ export class UIHandler {
 
   // Output Display
   displayResult(text) {
-    if (!this.elements.outputArea) return;
+    if (!this.elements.outputTextarea) return;
 
-    const placeholder = this.elements.outputArea.querySelector(
-      DOM_SELECTORS.PLACEHOLDER_TEXT
-    );
-    if (placeholder) {
-      placeholder.remove();
-    }
-
-    this.elements.outputArea.textContent = text;
-    this.elements.outputArea.style.color = "var(--text-primary)";
+    this.elements.outputTextarea.value = text;
+    this.elements.outputTextarea.style.color = "var(--text-primary)";
   }
 
   displayError(message) {
-    if (!this.elements.outputArea) return;
+    if (!this.elements.outputTextarea) return;
 
-    this.elements.outputArea.innerHTML = `<p style="color: var(--error-color);">${message}</p>`;
+    this.elements.outputTextarea.value = message;
+    this.elements.outputTextarea.style.color = "var(--error-color)";
+    this.setOutputStatus("");
   }
 
   clearOutput() {
-    if (!this.elements.outputArea) return;
+    if (!this.elements.outputTextarea) return;
 
-    this.elements.outputArea.textContent = "";
-    this.elements.outputArea.innerHTML = `<p class="${CSS_CLASSES.PLACEHOLDER_TEXT}">${UI_TEXTS.PLACEHOLDER_OUTPUT}</p>`;
+    this.elements.outputTextarea.value = "";
+    this.elements.outputTextarea.style.removeProperty("color");
+    this.setOutputStatus("");
+    this.resetCopyFeedback();
   }
 
   // Loading Overlay
@@ -105,16 +112,15 @@ export class UIHandler {
 
   // Copy Feedback
   showCopyFeedback() {
-    if (!this.elements.copyBtn) return;
+    if (!this.elements.copyBtn || !this.elements.outputStatus) return;
 
-    const originalIcon = this.elements.copyBtn.innerHTML;
-    this.elements.copyBtn.innerHTML = "✅";
-    this.elements.copyBtn.classList.add(CSS_CLASSES.COPIED);
+    this.elements.copyBtn.style.display = "none";
+    this.setOutputStatus("Kopiert!", true);
 
     setTimeout(() => {
-      this.elements.copyBtn.innerHTML = originalIcon;
-      this.elements.copyBtn.classList.remove(CSS_CLASSES.COPIED);
-    }, 2000);
+      this.elements.copyBtn.style.display = "";
+      this.setOutputStatus("");
+    }, CONFIG.UI.COPY_FEEDBACK_DURATION);
   }
 
   // Get Elements (for event listeners)
@@ -124,6 +130,27 @@ export class UIHandler {
 
   getAllElements() {
     return this.elements;
+  }
+
+  setOutputStatus(message, withAnimation = false) {
+    if (!this.elements.outputStatus) return;
+
+    const statusEl = this.elements.outputStatus;
+    statusEl.textContent = message;
+    statusEl.classList.remove("copy-feedback");
+
+    if (withAnimation && message) {
+      // Trigger reflow to restart animation
+      void statusEl.offsetWidth;
+      statusEl.classList.add("copy-feedback");
+    }
+  }
+
+  resetCopyFeedback() {
+    if (this.elements.copyBtn) {
+      this.elements.copyBtn.style.display = "";
+    }
+    this.setOutputStatus("");
   }
 }
 
