@@ -9,22 +9,108 @@
 }
 
 /* ============================================
-   CSS VARIABLES
+   CSS VARIABLES - THEME SYSTEM
    ============================================ */
 
 :root {
-    /* Colors */
-    --primary-color: #6366f1;
-    --primary-hover: #4f46e5;
-    --secondary-color: #8b5cf6;
-    --bg-color: #0f172a;
-    --surface-color: #1e293b;
-    --surface-hover: #334155;
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
-    --border-color: #334155;
-    --success-color: #10b981;
-    --error-color: #ef4444;
+    /* ============================================
+       LIGHT MODE COLORS (Schema 2)
+       ============================================ */
+    
+    /* Primary Colors (Hauptfarben) */
+    --color-light-primary: #6366F1;
+    --color-light-primary-hover: #4F46E5;
+    
+    /* Secondary Colors (Nebenfarben) */
+    --color-light-secondary: #818CF8;
+    --color-light-secondary-hover: #6366F1;
+    
+    /* Accent Colors (Akzentfarben) */
+    --color-light-accent: #14B8A6;
+    --color-light-accent-hover: #0D9488;
+    
+    /* Background Colors */
+    --color-light-background: #F9FAFB;
+    --color-light-surface: #FFFFFF;
+    --color-light-surface-hover: #F3F4F6;
+    
+    /* Text Colors */
+    --color-light-text-primary: #111827;
+    --color-light-text-secondary: #6B7280;
+    
+    /* Border Colors */
+    --color-light-border: #E5E7EB;
+    
+    /* Status Colors */
+    --color-light-success: #059669;
+    --color-light-warning: #D97706;
+    --color-light-error: #DC2626;
+    
+    /* ============================================
+       DARK MODE COLORS (Schema 2)
+       ============================================ */
+    
+    /* Primary Colors (Hauptfarben) */
+    --color-dark-primary: #818CF8;
+    --color-dark-primary-hover: #6366F1;
+    
+    /* Secondary Colors (Nebenfarben) */
+    --color-dark-secondary: #A5B4FC;
+    --color-dark-secondary-hover: #818CF8;
+    
+    /* Accent Colors (Akzentfarben) */
+    --color-dark-accent: #2DD4BF;
+    --color-dark-accent-hover: #14B8A6;
+    
+    /* Background Colors */
+    --color-dark-background: #111827;
+    --color-dark-surface: #1F2937;
+    --color-dark-surface-hover: #374151;
+    
+    /* Text Colors */
+    --color-dark-text-primary: #F9FAFB;
+    --color-dark-text-secondary: #D1D5DB;
+    
+    /* Border Colors */
+    --color-dark-border: #374151;
+    
+    /* Status Colors */
+    --color-dark-success: #10B981;
+    --color-dark-warning: #F59E0B;
+    --color-dark-error: #F87171;
+    
+    /* ============================================
+       ACTIVE THEME MAPPING (Dark Mode als Standard)
+       ============================================ */
+    
+    --color-primary: var(--color-dark-primary);
+    --color-primary-hover: var(--color-dark-primary-hover);
+    --color-secondary: var(--color-dark-secondary);
+    --color-secondary-hover: var(--color-dark-secondary-hover);
+    --color-accent: var(--color-dark-accent);
+    --color-accent-hover: var(--color-dark-accent-hover);
+    --color-background: var(--color-dark-background);
+    --color-surface: var(--color-dark-surface);
+    --color-surface-hover: var(--color-dark-surface-hover);
+    --color-text-primary: var(--color-dark-text-primary);
+    --color-text-secondary: var(--color-dark-text-secondary);
+    --color-border: var(--color-dark-border);
+    --color-success: var(--color-dark-success);
+    --color-warning: var(--color-dark-warning);
+    --color-error: var(--color-dark-error);
+    
+    /* Legacy Support - werden auf neue Variablen gemappt */
+    --primary-color: var(--color-primary);
+    --primary-hover: var(--color-primary-hover);
+    --secondary-color: var(--color-secondary);
+    --bg-color: var(--color-background);
+    --surface-color: var(--color-surface);
+    --surface-hover: var(--color-surface-hover);
+    --text-primary: var(--color-text-primary);
+    --text-secondary: var(--color-text-secondary);
+    --border-color: var(--color-border);
+    --success-color: var(--color-success);
+    --error-color: var(--color-error);
 
     /* Spacing */
     --spacing-xs: 0.5rem;
@@ -59,13 +145,52 @@
 }
 
 /* ============================================
+   LIGHT MODE THEME (Für späteren Switch)
+   ============================================ */
+
+[data-theme="light"] {
+    --color-primary: var(--color-light-primary);
+    --color-primary-hover: var(--color-light-primary-hover);
+    --color-secondary: var(--color-light-secondary);
+    --color-secondary-hover: var(--color-light-secondary-hover);
+    --color-accent: var(--color-light-accent);
+    --color-accent-hover: var(--color-light-accent-hover);
+    --color-background: var(--color-light-background);
+    --color-surface: var(--color-light-surface);
+    --color-surface-hover: var(--color-light-surface-hover);
+    --color-text-primary: var(--color-light-text-primary);
+    --color-text-secondary: var(--color-light-text-secondary);
+    --color-border: var(--color-light-border);
+    --color-success: var(--color-light-success);
+    --color-warning: var(--color-light-warning);
+    --color-error: var(--color-light-error);
+    
+    /* Legacy Support */
+    --primary-color: var(--color-primary);
+    --primary-hover: var(--color-primary-hover);
+    --secondary-color: var(--color-secondary);
+    --bg-color: var(--color-background);
+    --surface-color: var(--color-surface);
+    --surface-hover: var(--color-surface-hover);
+    --text-primary: var(--color-text-primary);
+    --text-secondary: var(--color-text-secondary);
+    --border-color: var(--color-border);
+    --success-color: var(--color-success);
+    --error-color: var(--color-error);
+    
+    /* Light Mode Shadows */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
    BASE TYPOGRAPHY & LAYOUT
    ============================================ */
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    color: var(--text-primary);
+    background: var(--color-background);
+    color: var(--color-text-primary);
     min-height: 100vh;
     line-height: 1.6;
 }
@@ -91,7 +216,7 @@ body {
 .logo {
     font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -99,7 +224,7 @@ body {
 }
 
 .subtitle {
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     font-size: var(--spacing-md);
 }
 
@@ -386,7 +511,7 @@ body {
     width: var(--process-btn-size);
     height: var(--process-btn-size);
     padding: 0;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
     border: none;
     border-radius: var(--radius-full);
     color: white;
@@ -570,7 +695,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(15, 23, 42, 0.9);
+    background: rgba(17, 24, 39, 0.9);
     display: flex;
     flex-direction: column;
     justify-content: center;
