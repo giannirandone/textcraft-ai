@@ -1,6 +1,6 @@
 // Main Application Logic für TextCraft AI
 
-import { DEFAULT_MODE, UI_TEXTS } from "./config.js";
+import { CSS_CLASSES, UI_TEXTS } from "./config.js";
 import { StateManager } from "./modules/state-manager.js";
 import { ApiService } from "./modules/api-service.js";
 import { UIHandler } from "./modules/ui-handler.js";
@@ -15,8 +15,10 @@ class TextCraftApp {
   }
 
   init() {
+    this.syncInitialSelections();
     this.setupEventListeners();
     this.updateCharCount();
+    this.updateProcessButton();
   }
 
   setupEventListeners() {
@@ -48,21 +50,45 @@ class TextCraftApp {
   handleInputChange() {
     const elements = this.ui.getAllElements();
     const inputText = elements.inputTextarea.value;
+    const trimmedText = inputText.trim();
+    const lastProcessed = this.state.getLastProcessedText() ?? "";
+    const matchesLastProcessed =
+      inputText === lastProcessed && trimmedText.length > 0;
+    const hasInput = trimmedText.length > 0;
 
     this.state.setInputText(inputText);
-    this.state.setOutputText(inputText);
     this.ui.resetCopyFeedback();
-    this.ui.displayResult(inputText);
-    this.ui.updateCopyButtonState(inputText.length > 0);
+
+    if (!hasInput) {
+      this.state.setOutputText("");
+      this.ui.clearOutput();
+      this.ui.updateCopyButtonState(false);
+    } else if (matchesLastProcessed) {
+      this.state.setOutputText(lastProcessed);
+      this.ui.displayResult(lastProcessed);
+      this.ui.updateCopyButtonState(true);
+    } else {
+      this.state.setOutputText("");
+      this.ui.displayProcessing();
+      this.ui.updateCopyButtonState(false);
+    }
+
     this.updateCharCount();
     this.updateProcessButton();
   }
 
   handleTabClick(clickedBtn) {
     const mode = clickedBtn.dataset.mode;
+    const tab = clickedBtn.dataset.tab;
 
-    this.ui.activateTabButton(clickedBtn);
-    this.state.setMode(mode);
+    if (tab === "1") {
+      const isActive = this.ui.toggleTabButton(clickedBtn);
+      this.state.setProcessingMode(mode, isActive);
+    } else {
+      this.ui.activateExclusiveTabButton(clickedBtn);
+      this.state.setStyleMode(mode);
+    }
+
     this.updateProcessButton();
   }
 
@@ -82,7 +108,7 @@ class TextCraftApp {
 
   updateProcessButton() {
     const elements = this.ui.getAllElements();
-    const currentText = elements.inputTextarea.value.trim();
+    const currentText = elements.inputTextarea.value;
 
     this.state.setInputText(currentText);
     const canProcess = this.state.canProcess();
@@ -98,8 +124,14 @@ class TextCraftApp {
       return;
     }
 
-    // Speichere den Text zum Zeitpunkt des Klicks
-    this.state.setLastProcessedText(trimmedInputText);
+    const currentProcessingModes = this.state.getProcessingModes();
+    const currentStyleMode = this.state.getStyleMode();
+
+    this.state.setLastProcessedState({
+      text: rawInputText,
+      processingModes: currentProcessingModes,
+      styleMode: currentStyleMode,
+    });
 
     // Ergebnis entspricht exakt dem eingegebenen Text
     this.state.setOutputText(rawInputText);
@@ -120,6 +152,24 @@ class TextCraftApp {
       console.error("Failed to copy:", error);
       alert(UI_TEXTS.ERROR_COPY);
     }
+  }
+
+  syncInitialSelections() {
+    const elements = this.ui.getAllElements();
+    elements.tabButtons.forEach((btn) => {
+      if (!btn.classList.contains(CSS_CLASSES.ACTIVE)) {
+        return;
+      }
+
+      const mode = btn.dataset.mode;
+      const tab = btn.dataset.tab;
+
+      if (tab === "1") {
+        this.state.setProcessingMode(mode, true);
+      } else if (tab === "2") {
+        this.state.setStyleMode(mode);
+      }
+    });
   }
 }
 

@@ -52,17 +52,22 @@ export class UIHandler {
   }
 
   // Tab Management
-  activateTabButton(button) {
+  activateExclusiveTabButton(button) {
     const tab = button.dataset.tab;
     const sameTabButtons = document.querySelectorAll(
       DOM_SELECTORS.TAB_BUTTON_BY_TAB(tab)
     );
     sameTabButtons.forEach((btn) => {
-      btn.classList.remove(CSS_CLASSES.ACTIVE);
-      btn.setAttribute("aria-pressed", "false");
+      const isActive = btn === button;
+      this.setTabButtonState(btn, isActive);
     });
-    button.classList.add(CSS_CLASSES.ACTIVE);
-    button.setAttribute("aria-pressed", "true");
+  }
+
+  toggleTabButton(button) {
+    const isActive = button.classList.contains(CSS_CLASSES.ACTIVE);
+    const newState = !isActive;
+    this.setTabButtonState(button, newState);
+    return newState;
   }
 
   activateDefaultMode() {
@@ -70,7 +75,7 @@ export class UIHandler {
       DOM_SELECTORS.TAB_BUTTON_BY_MODE(DEFAULT_MODE)
     );
     if (firstBtn) {
-      this.activateTabButton(firstBtn);
+      this.activateExclusiveTabButton(firstBtn);
     }
   }
 
@@ -80,6 +85,7 @@ export class UIHandler {
 
     this.elements.outputTextarea.value = text;
     this.elements.outputTextarea.style.color = "var(--text-primary)";
+    this.setOutputStatus("");
   }
 
   displayError(message) {
@@ -97,6 +103,14 @@ export class UIHandler {
     this.elements.outputTextarea.style.removeProperty("color");
     this.setOutputStatus("");
     this.resetCopyFeedback();
+  }
+
+  displayProcessing() {
+    if (!this.elements.outputTextarea) return;
+
+    this.elements.outputTextarea.value = "Processing...";
+    this.elements.outputTextarea.style.color = "var(--text-secondary)";
+    this.setOutputStatus("");
   }
 
   // Loading Overlay
@@ -152,5 +166,17 @@ export class UIHandler {
     }
     this.setOutputStatus("");
   }
-}
 
+  setTabButtonState(button, isActive) {
+    if (!button) {
+      return;
+    }
+    if (isActive) {
+      button.classList.add(CSS_CLASSES.ACTIVE);
+      button.setAttribute("aria-pressed", "true");
+    } else {
+      button.classList.remove(CSS_CLASSES.ACTIVE);
+      button.setAttribute("aria-pressed", "false");
+    }
+  }
+}

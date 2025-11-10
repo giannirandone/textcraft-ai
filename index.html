@@ -1,190 +1,209 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TextCraft AI - Intelligente Textoptimierung mit KI">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TextCraft AI - Intelligente Textoptimierung mit KI"
+    />
     <title>TextCraft AI - Textoptimierung</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
     <div class="container">
-        <header class="header" role="banner">
-            <h1 class="logo">✨ TextCraft AI</h1>
-            <p class="subtitle">Intelligente Textoptimierung mit KI</p>
-        </header>
+      <header class="header" role="banner">
+        <h1 class="logo">✨ TextCraft AI</h1>
+        <p class="subtitle">Intelligente Textoptimierung mit KI</p>
+      </header>
 
-        <main class="main-content" role="main">
-            <!-- Reiter-System für Optionen -->
-            <section class="options-panel" aria-label="Text-Verarbeitungsoptionen">
-                <div class="tabs-container">
-                    <!-- Teil 1: Zusammenfassen & Korrigieren -->
-                    <div class="tab-section">
-                        <h3 class="tab-title">Text-Verarbeitung</h3>
-                        <div class="tab-buttons" role="group" aria-label="Text-Verarbeitungsoptionen">
-                            <button 
-                                class="tab-btn active" 
-                                data-mode="summarize" 
-                                data-tab="1"
-                                aria-pressed="true"
-                                aria-label="Text zusammenfassen"
-                            >
-                                📝 Zusammenfassen
-                            </button>
-                            <button 
-                                class="tab-btn" 
-                                data-mode="correct" 
-                                data-tab="1"
-                                aria-pressed="false"
-                                aria-label="Text korrigieren"
-                            >
-                                ✏️ Korrigieren
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Teil 2: Adressatenbezogene Textstile -->
-                    <div class="tab-section">
-                        <h3 class="tab-title">Textstil</h3>
-                        <div class="tab-buttons" role="group" aria-label="Textstil-Optionen">
-                            <button 
-                                class="tab-btn tab-btn-icon active" 
-                                data-mode="formal" 
-                                data-tab="2" 
-                                data-tooltip="Formal"
-                                aria-pressed="true"
-                                aria-label="Formaler Textstil"
-                            >
-                                👔
-                            </button>
-                            <button 
-                                class="tab-btn tab-btn-icon" 
-                                data-mode="casual" 
-                                data-tab="2" 
-                                data-tooltip="Freundlich"
-                                aria-pressed="false"
-                                aria-label="Freundlicher Textstil"
-                            >
-                                😊
-                            </button>
-                            <button 
-                                class="tab-btn tab-btn-icon" 
-                                data-mode="professional" 
-                                data-tab="2" 
-                                data-tooltip="Professionell"
-                                aria-pressed="false"
-                                aria-label="Professioneller Textstil"
-                            >
-                                💼
-                            </button>
-                            <button 
-                                class="tab-btn tab-btn-icon" 
-                                data-mode="creative" 
-                                data-tab="2" 
-                                data-tooltip="Kreativ"
-                                aria-pressed="false"
-                                aria-label="Kreativer Textstil"
-                            >
-                                🎨
-                            </button>
-                            <button 
-                                class="tab-btn tab-btn-icon" 
-                                data-mode="simple" 
-                                data-tab="2" 
-                                data-tooltip="Einfach"
-                                aria-pressed="false"
-                                aria-label="Einfacher Textstil"
-                            >
-                                📖
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Textfelder nebeneinander -->
-            <div class="text-fields-container">
-                <!-- Eingabefeld -->
-                <section class="text-section input-section" aria-label="Texteingabe">
-                    <div class="section-header">
-                        <h2>Eingabe</h2>
-                        <span class="char-count" id="inputCharCount" aria-live="polite">0 Zeichen</span>
-                    </div>
-                    <textarea 
-                        id="inputText" 
-                        class="text-area" 
-                        placeholder="Geben Sie hier Ihren Text ein..."
-                        rows="8"
-                        aria-label="Texteingabefeld"
-                        aria-describedby="inputCharCount"
-                    ></textarea>
-                </section>
-
-                <!-- Button zwischen den Feldern -->
-                <button 
-                    id="processBtn" 
-                    class="process-btn-center" 
-                    disabled
-                    aria-label="Text verarbeiten"
-                    title="Text verarbeiten"
+      <main class="main-content" role="main">
+        <!-- Reiter-System für Optionen -->
+        <section class="options-panel" aria-label="Text-Verarbeitungsoptionen">
+          <div class="tabs-container">
+            <!-- Teil 1: Zusammenfassen & Korrigieren -->
+            <div class="tab-section">
+              <h3 class="tab-title">Text-Verarbeitung</h3>
+              <div
+                class="tab-buttons"
+                role="group"
+                aria-label="Text-Verarbeitungsoptionen"
+              >
+                <button
+                  class="tab-btn active"
+                  data-mode="summarize"
+                  data-tab="1"
+                  aria-pressed="true"
+                  aria-label="Text zusammenfassen"
                 >
-                    <span class="btn-icon" aria-hidden="true">➜</span>
+                  📝 Zusammenfassen
                 </button>
-
-                <!-- Ausgabefeld -->
-                <section class="text-section output-section" aria-label="Textausgabe">
-                    <div class="section-header">
-                        <h2>Ausgabe</h2>
-                        <span class="char-count" id="outputStatus" aria-live="polite"></span>
-                    </div>
-                    <div class="output-wrapper">
-                        <textarea
-                            id="outputText"
-                            class="text-area output-area"
-                            placeholder="Hier erscheint der optimierte Text..."
-                            rows="8"
-                            aria-label="Textausgabefeld"
-                            aria-describedby="outputStatus"
-                            readonly
-                        ></textarea>
-                        <button 
-                            id="copyBtn" 
-                            class="copy-btn-icon" 
-                            data-tooltip="Kopieren" 
-                            disabled
-                            aria-label="Text in Zwischenablage kopieren"
-                            title="Kopieren"
-                        >
-                            📋
-                        </button>
-                    </div>
-                </section>
+                <button
+                  class="tab-btn"
+                  data-mode="correct"
+                  data-tab="1"
+                  aria-pressed="false"
+                  aria-label="Text korrigieren"
+                >
+                  ✏️ Korrigieren
+                </button>
+              </div>
             </div>
-        </main>
 
-        <footer class="footer" role="contentinfo">
-            <p>Gianni was here • Made with ❤️</p>
-        </footer>
+            <!-- Teil 2: Adressatenbezogene Textstile -->
+            <div class="tab-section">
+              <h3 class="tab-title">Textstil</h3>
+              <div
+                class="tab-buttons"
+                role="group"
+                aria-label="Textstil-Optionen"
+              >
+                <button
+                  class="tab-btn tab-btn-icon active"
+                  data-mode="formal"
+                  data-tab="2"
+                  data-tooltip="Formal"
+                  aria-pressed="true"
+                  aria-label="Formaler Textstil"
+                >
+                  👔
+                </button>
+                <button
+                  class="tab-btn tab-btn-icon"
+                  data-mode="casual"
+                  data-tab="2"
+                  data-tooltip="Freundlich"
+                  aria-pressed="false"
+                  aria-label="Freundlicher Textstil"
+                >
+                  😊
+                </button>
+                <button
+                  class="tab-btn tab-btn-icon"
+                  data-mode="professional"
+                  data-tab="2"
+                  data-tooltip="Professionell"
+                  aria-pressed="false"
+                  aria-label="Professioneller Textstil"
+                >
+                  💼
+                </button>
+                <button
+                  class="tab-btn tab-btn-icon"
+                  data-mode="creative"
+                  data-tab="2"
+                  data-tooltip="Kreativ"
+                  aria-pressed="false"
+                  aria-label="Kreativer Textstil"
+                >
+                  🎨
+                </button>
+                <button
+                  class="tab-btn tab-btn-icon"
+                  data-mode="simple"
+                  data-tab="2"
+                  data-tooltip="Einfach"
+                  aria-pressed="false"
+                  aria-label="Einfacher Textstil"
+                >
+                  📖
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Textfelder nebeneinander -->
+        <div class="text-fields-container">
+          <!-- Eingabefeld -->
+          <section class="text-section input-section" aria-label="Texteingabe">
+            <div class="section-header">
+              <h2>Eingabe</h2>
+              <span class="char-count" id="inputCharCount" aria-live="polite"
+                >0 Zeichen</span
+              >
+            </div>
+            <textarea
+              id="inputText"
+              class="text-area"
+              placeholder="Geben Sie hier Ihren Text ein..."
+              rows="8"
+              aria-label="Texteingabefeld"
+              aria-describedby="inputCharCount"
+            ></textarea>
+          </section>
+
+          <!-- Button zwischen den Feldern -->
+          <button
+            id="processBtn"
+            class="process-btn-center"
+            disabled
+            aria-label="Text verarbeiten"
+            title="Text verarbeiten"
+          >
+            <span class="btn-icon" aria-hidden="true">➜</span>
+          </button>
+
+          <!-- Ausgabefeld -->
+          <section class="text-section output-section" aria-label="Textausgabe">
+            <div class="section-header">
+              <h2>Ausgabe</h2>
+              <span
+                class="char-count"
+                id="outputStatus"
+                aria-live="polite"
+              ></span>
+            </div>
+            <div class="output-wrapper">
+              <textarea
+                id="outputText"
+                class="text-area output-area"
+                placeholder="Hier erscheint der optimierte Text..."
+                rows="8"
+                aria-label="Textausgabefeld"
+                aria-describedby="outputStatus"
+                readonly
+              ></textarea>
+              <button
+                id="copyBtn"
+                class="copy-btn-icon"
+                data-tooltip="Kopieren"
+                disabled
+                aria-label="Text in Zwischenablage kopieren"
+                title="Kopieren"
+              >
+                📋
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="footer" role="contentinfo">
+        <p>Gianni was here • Made with ❤️</p>
+      </footer>
     </div>
 
     <!-- Loading Overlay -->
-    <div 
-        id="loadingOverlay" 
-        class="loading-overlay hidden" 
-        role="status"
-        aria-live="polite"
-        aria-label="Text wird verarbeitet"
+    <div
+      id="loadingOverlay"
+      class="loading-overlay hidden"
+      role="status"
+      aria-live="polite"
+      aria-label="Text wird verarbeitet"
     >
-        <div class="loading-spinner" aria-hidden="true"></div>
-        <p>Text wird verarbeitet...</p>
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p>Text wird verarbeitet...</p>
     </div>
 
     <script type="module" src="js/app.js"></script>
-</body>
+  </body>
 </html>
-

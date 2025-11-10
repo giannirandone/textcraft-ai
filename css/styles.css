@@ -34,6 +34,9 @@
     --spacing-xl: 2rem;
     --spacing-2xl: 3rem;
 
+    /* Component Sizes */
+    --process-btn-size: 60px;
+
     /* Border Radius */
     --radius-sm: 6px;
     --radius-md: 8px;
@@ -232,16 +235,16 @@ body {
 }
 
 .tabs-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
-    align-items: start;
+    display: flex;
+    align-items: stretch;
+    gap: calc(var(--spacing-lg) * 2 + var(--process-btn-size));
 }
 
 .tab-section {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
+    flex: 1 1 0;
 }
 
 .tab-title {
@@ -380,8 +383,8 @@ body {
    ============================================ */
 
 .process-btn-center {
-    width: 60px;
-    height: 60px;
+    width: var(--process-btn-size);
+    height: var(--process-btn-size);
     padding: 0;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     border: none;
@@ -606,6 +609,10 @@ body {
    ============================================ */
 
 @media (max-width: 768px) {
+    :root {
+        --process-btn-size: 50px;
+    }
+
     .container {
         padding: var(--spacing-md);
     }
@@ -615,7 +622,7 @@ body {
     }
 
     .tabs-container {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: var(--spacing-lg);
     }
 
@@ -629,8 +636,8 @@ body {
     }
 
     .process-btn-center {
-        width: 50px;
-        height: 50px;
+        width: var(--process-btn-size);
+        height: var(--process-btn-size);
         margin-top: 0;
         justify-self: center;
     }
