@@ -28,70 +28,71 @@ export class UIHandler {
   }
 
   // Character Count Updates
-  updateCharCount(count) {
+  updateCharCount(characterCount) {
     if (this.elements.inputCharCount) {
-      this.elements.inputCharCount.textContent = UI_TEXTS.CHAR_COUNT(count);
+      this.elements.inputCharCount.textContent =
+        UI_TEXTS.CHAR_COUNT(characterCount);
     }
   }
 
   // Process Button State
-  updateProcessButtonState(enabled) {
+  updateProcessButtonState(isEnabled) {
     if (this.elements.processBtn) {
-      this.elements.processBtn.disabled = !enabled;
+      this.elements.processBtn.disabled = !isEnabled;
     }
   }
 
   // Copy Button State
-  updateCopyButtonState(enabled) {
+  updateCopyButtonState(isEnabled) {
     if (this.elements.copyBtn) {
-      this.elements.copyBtn.disabled = !enabled;
-      if (enabled) {
+      this.elements.copyBtn.disabled = !isEnabled;
+      if (isEnabled) {
         this.elements.copyBtn.style.display = "";
       }
     }
   }
 
   // Tab Management
-  activateExclusiveTabButton(button) {
-    const tab = button.dataset.tab;
+  activateExclusiveTabButton(tabButton) {
+    const tabGroup = tabButton.dataset.tab;
     const sameTabButtons = document.querySelectorAll(
-      DOM_SELECTORS.TAB_BUTTON_BY_TAB(tab)
+      DOM_SELECTORS.TAB_BUTTON_BY_TAB(tabGroup)
     );
-    sameTabButtons.forEach((btn) => {
-      const isActive = btn === button;
-      this.setTabButtonState(btn, isActive);
+    sameTabButtons.forEach((button) => {
+      const isButtonActive = button === tabButton;
+      this.setTabButtonState(button, isButtonActive);
     });
   }
 
-  toggleTabButton(button) {
-    const isActive = button.classList.contains(CSS_CLASSES.ACTIVE);
-    const newState = !isActive;
-    this.setTabButtonState(button, newState);
-    return newState;
+  toggleTabButton(tabButton) {
+    const isButtonActive = tabButton.classList.contains(CSS_CLASSES.ACTIVE);
+    const isNowActive = !isButtonActive;
+    this.setTabButtonState(tabButton, isNowActive);
+    return isNowActive;
   }
 
   activateDefaultMode() {
-    const firstBtn = document.querySelector(
+    const firstTabButton = document.querySelector(
       DOM_SELECTORS.TAB_BUTTON_BY_MODE(DEFAULT_MODE)
     );
-    if (firstBtn) {
-      this.activateExclusiveTabButton(firstBtn);
+    if (firstTabButton) {
+      this.activateExclusiveTabButton(firstTabButton);
     }
   }
 
   // Output Display
-  displayResult(text) {
+  displayResult(outputText) {
     if (!this.elements.outputTextarea) return;
 
-    this.elements.outputTextarea.value = text;
+    this.elements.outputTextarea.value = outputText;
     this.elements.outputTextarea.style.color = "var(--text-primary)";
     this.setOutputStatus("");
   }
 
-  displayError(message) {
+  displayError(errorMessage) {
     if (!this.elements.outputTextarea) return;
 
-    this.elements.outputTextarea.value = message;
+    this.elements.outputTextarea.value = errorMessage;
     this.elements.outputTextarea.style.color = "var(--error-color)";
     this.setOutputStatus("");
   }
@@ -108,16 +109,16 @@ export class UIHandler {
   displayProcessing() {
     if (!this.elements.outputTextarea) return;
 
-    this.elements.outputTextarea.value = "Processing...";
+    this.elements.outputTextarea.value = UI_TEXTS.LOADING_MESSAGE;
     this.elements.outputTextarea.style.color = "var(--text-secondary)";
     this.setOutputStatus("");
   }
 
   // Loading Overlay
-  showLoading(show) {
+  showLoading(shouldShow) {
     if (!this.elements.loadingOverlay) return;
 
-    if (show) {
+    if (shouldShow) {
       this.elements.loadingOverlay.classList.remove(CSS_CLASSES.HIDDEN);
     } else {
       this.elements.loadingOverlay.classList.add(CSS_CLASSES.HIDDEN);
@@ -129,7 +130,7 @@ export class UIHandler {
     if (!this.elements.copyBtn || !this.elements.outputStatus) return;
 
     this.elements.copyBtn.style.display = "none";
-    this.setOutputStatus("Kopiert!", true);
+    this.setOutputStatus(UI_TEXTS.COPY_SUCCESS, true);
 
     setTimeout(() => {
       this.elements.copyBtn.style.display = "";
@@ -146,17 +147,17 @@ export class UIHandler {
     return this.elements;
   }
 
-  setOutputStatus(message, withAnimation = false) {
+  setOutputStatus(statusMessage, withAnimation = false) {
     if (!this.elements.outputStatus) return;
 
-    const statusEl = this.elements.outputStatus;
-    statusEl.textContent = message;
-    statusEl.classList.remove("copy-feedback");
+    const statusElement = this.elements.outputStatus;
+    statusElement.textContent = statusMessage;
+    statusElement.classList.remove("copy-feedback");
 
-    if (withAnimation && message) {
+    if (withAnimation && statusMessage) {
       // Trigger reflow to restart animation
-      void statusEl.offsetWidth;
-      statusEl.classList.add("copy-feedback");
+      void statusElement.offsetWidth;
+      statusElement.classList.add("copy-feedback");
     }
   }
 
@@ -167,16 +168,16 @@ export class UIHandler {
     this.setOutputStatus("");
   }
 
-  setTabButtonState(button, isActive) {
-    if (!button) {
+  setTabButtonState(tabButton, isButtonActive) {
+    if (!tabButton) {
       return;
     }
-    if (isActive) {
-      button.classList.add(CSS_CLASSES.ACTIVE);
-      button.setAttribute("aria-pressed", "true");
+    if (isButtonActive) {
+      tabButton.classList.add(CSS_CLASSES.ACTIVE);
+      tabButton.setAttribute("aria-pressed", "true");
     } else {
-      button.classList.remove(CSS_CLASSES.ACTIVE);
-      button.setAttribute("aria-pressed", "false");
+      tabButton.classList.remove(CSS_CLASSES.ACTIVE);
+      tabButton.setAttribute("aria-pressed", "false");
     }
   }
 }

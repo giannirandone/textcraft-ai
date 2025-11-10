@@ -15,60 +15,60 @@ export class StateManager {
     return Array.from(this.selectedProcessingModes);
   }
 
-  setProcessingMode(mode, isSelected) {
-    if (!mode) {
+  setProcessingMode(processingMode, isSelected) {
+    if (!processingMode) {
       return;
     }
     if (isSelected) {
-      this.selectedProcessingModes.add(mode);
+      this.selectedProcessingModes.add(processingMode);
     } else {
-      this.selectedProcessingModes.delete(mode);
+      this.selectedProcessingModes.delete(processingMode);
     }
   }
 
-  isProcessingModeSelected(mode) {
-    return this.selectedProcessingModes.has(mode);
+  isProcessingModeSelected(processingMode) {
+    return this.selectedProcessingModes.has(processingMode);
   }
 
   getStyleMode() {
     return this.selectedStyleMode;
   }
 
-  setStyleMode(mode) {
-    this.selectedStyleMode = mode;
+  setStyleMode(styleMode) {
+    this.selectedStyleMode = styleMode;
   }
 
   getInputText() {
     return this.inputText;
   }
 
-  setInputText(text) {
-    this.inputText = text;
+  setInputText(inputText) {
+    this.inputText = inputText;
   }
 
   getOutputText() {
     return this.outputText;
   }
 
-  setOutputText(text) {
-    this.outputText = text;
+  setOutputText(outputText) {
+    this.outputText = outputText;
   }
 
   getLastProcessedText() {
     return this.lastProcessedText;
   }
 
-  setLastProcessedText(text) {
-    this.lastProcessedText = text;
+  setLastProcessedText(inputText) {
+    this.lastProcessedText = inputText;
   }
 
   setLastProcessedState({ text, processingModes, styleMode }) {
     this.setLastProcessedText(text);
-    const normalizedProcessing = Array.isArray(processingModes)
+    const normalizedProcessingModes = Array.isArray(processingModes)
       ? [...processingModes].sort()
       : [];
     this.lastProcessedConfig = {
-      processingModes: normalizedProcessing,
+      processingModes: normalizedProcessingModes,
       styleMode: styleMode ?? null,
     };
     this.lastProcessedSelectionSignature = this.getSelectionSignature();
@@ -79,9 +79,9 @@ export class StateManager {
   }
 
   hasTextChanged() {
-    const currentText = this.inputText;
-    const lastProcessed = this.lastProcessedText ?? "";
-    return currentText !== lastProcessed;
+    const currentInputText = this.inputText;
+    const lastProcessedText = this.lastProcessedText ?? "";
+    return currentInputText !== lastProcessedText;
   }
 
   hasSelectionChanged() {
@@ -89,31 +89,35 @@ export class StateManager {
       return true;
     }
 
-    const currentSignature = this.getSelectionSignature();
-    if (this.lastProcessedSelectionSignature !== currentSignature) {
+    const currentSelectionSignature = this.getSelectionSignature();
+    if (this.lastProcessedSelectionSignature !== currentSelectionSignature) {
       return true;
     }
 
-    const currentProcessing = [...this.selectedProcessingModes].sort();
-    const lastProcessing = this.lastProcessedConfig.processingModes ?? [];
+    // Additional validation: compare processing modes arrays
+    const currentProcessingModes = [...this.selectedProcessingModes].sort();
+    const lastProcessedProcessingModes = this.lastProcessedConfig.processingModes ?? [];
 
-    if (currentProcessing.length !== lastProcessing.length) {
+    if (currentProcessingModes.length !== lastProcessedProcessingModes.length) {
       return true;
     }
 
-    for (let i = 0; i < currentProcessing.length; i += 1) {
-      if (currentProcessing[i] !== lastProcessing[i]) {
-        return true;
-      }
+    // Check if processing modes arrays differ
+    const processingModesDiffer = currentProcessingModes.some(
+      (mode, index) => mode !== lastProcessedProcessingModes[index]
+    );
+    if (processingModesDiffer) {
+      return true;
     }
 
+    // Check if style mode changed
     return this.selectedStyleMode !== this.lastProcessedConfig.styleMode;
   }
 
   getSelectionSignature() {
-    const sortedProcessing = [...this.selectedProcessingModes].sort();
-    const style = this.selectedStyleMode ?? "";
-    return `${sortedProcessing.join("|")}::${style}`;
+    const sortedProcessingModes = [...this.selectedProcessingModes].sort();
+    const selectedStyle = this.selectedStyleMode ?? "";
+    return `${sortedProcessingModes.join("|")}::${selectedStyle}`;
   }
 
   canProcess() {

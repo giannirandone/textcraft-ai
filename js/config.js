@@ -64,31 +64,32 @@ export const UI_TEXTS = {
     LOADING_MESSAGE: 'Text wird verarbeitet...',
     ERROR_PROCESSING: 'Fehler beim Verarbeiten des Textes. Bitte versuchen Sie es erneut.',
     ERROR_COPY: 'Kopieren fehlgeschlagen. Bitte manuell kopieren.',
-    CHAR_COUNT: (count) => `${count} Zeichen`,
+    COPY_SUCCESS: 'Kopiert!',
+    CHAR_COUNT: (characterCount) => `${characterCount} Zeichen`,
 };
 
 // Simulierte Antworten für Demo-Zwecke
-export function generateSimulatedResponse(mode, text) {
-    const responses = {
-        summarize: `Zusammenfassung: ${text.substring(
+export function generateSimulatedResponse(textMode, inputText) {
+    const simulatedResponses = {
+        summarize: `Zusammenfassung: ${inputText.substring(
             0,
-            Math.min(100, text.length)
+            Math.min(100, inputText.length)
         )}...`,
-        correct: text
+        correct: inputText
             .split(" ")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" "),
-        formal: `Sehr geehrte Damen und Herren,\n\n${text}\n\nMit freundlichen Grüßen`,
-        casual: `Hey! 👋\n\n${text}\n\nViele Grüße! 😊`,
-        professional: `Betreff: ${text.substring(0, 50)}...\n\n${text}`,
-        creative: `✨ ${text
+        formal: `Sehr geehrte Damen und Herren,\n\n${inputText}\n\nMit freundlichen Grüßen`,
+        casual: `Hey! 👋\n\n${inputText}\n\nViele Grüße! 😊`,
+        professional: `Betreff: ${inputText.substring(0, 50)}...\n\n${inputText}`,
+        creative: `✨ ${inputText
             .split("")
             .map((char, i) => (i % 2 === 0 ? char.toUpperCase() : char))
             .join("")} ✨`,
-        simple: text.toLowerCase().replace(/[.,!?]/g, ""),
+        simple: inputText.toLowerCase().replace(/[.,!?]/g, ""),
     };
 
-    return responses[mode] || text;
+    return simulatedResponses[textMode] || inputText;
 }
 
 // Constants
@@ -101,8 +102,8 @@ export const CSS_CLASSES = {
 };
 export const DOM_SELECTORS = {
     TAB_BUTTON: '.tab-btn',
-    TAB_BUTTON_BY_MODE: (mode) => `.tab-btn[data-mode="${mode}"]`,
-    TAB_BUTTON_BY_TAB: (tab) => `[data-tab="${tab}"]`,
+    TAB_BUTTON_BY_MODE: (textMode) => `.tab-btn[data-mode="${textMode}"]`,
+    TAB_BUTTON_BY_TAB: (tabGroup) => `[data-tab="${tabGroup}"]`,
     PLACEHOLDER_TEXT: '.placeholder-text',
 };
 

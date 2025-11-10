@@ -12,32 +12,32 @@ export class ApiService {
     this.isSimulationMode = true; // TODO: Später durch Feature-Flag ersetzen
   }
 
-  async processText(text, mode) {
+  async processText(inputText, textMode) {
     if (this.isSimulationMode) {
-      return this.simulateApiCall(text, mode);
+      return this.simulateApiCall(inputText, textMode);
     }
-    return this.callRealApi(text, mode);
+    return this.callRealApi(inputText, textMode);
   }
 
-  async simulateApiCall(text, mode) {
+  async simulateApiCall(inputText, textMode) {
     // Simuliere API-Call Delay
     await new Promise((resolve) =>
       setTimeout(resolve, CONFIG.UI.API_SIMULATION_DELAY)
     );
 
     // Generiere simulierte Antwort
-    return generateSimulatedResponse(mode, text);
+    return generateSimulatedResponse(textMode, inputText);
   }
 
-  async callRealApi(text, mode) {
+  async callRealApi(inputText, textMode) {
     // TODO: Implementiere echte API-Integration
-    const modeConfig = TEXT_MODES[mode];
-    if (!modeConfig) {
-      throw new Error(`Unknown mode: ${mode}`);
+    const textModeConfiguration = TEXT_MODES[textMode];
+    if (!textModeConfiguration) {
+      throw new Error(`Unknown mode: ${textMode}`);
     }
 
     try {
-      const response = await fetch(CONFIG.API_ENDPOINT, {
+      const apiResponse = await fetch(CONFIG.API_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,27 +46,27 @@ export class ApiService {
           model: CONFIG.MODEL,
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: `${modeConfig.prompt}\n\n${text}` },
+            { role: "user", content: `${textModeConfiguration.prompt}\n\n${inputText}` },
           ],
           max_tokens: CONFIG.MAX_TOKENS,
           temperature: CONFIG.TEMPERATURE,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.statusText}`);
+      if (!apiResponse.ok) {
+        throw new Error(`API request failed: ${apiResponse.statusText}`);
       }
 
-      const data = await response.json();
-      return data.choices[0].message.content.trim();
-    } catch (error) {
-      console.error("API Error:", error);
-      throw error;
+      const apiResponseData = await apiResponse.json();
+      return apiResponseData.choices[0].message.content.trim();
+    } catch (apiError) {
+      console.error("API Error:", apiError);
+      throw apiError;
     }
   }
 
-  setSimulationMode(enabled) {
-    this.isSimulationMode = enabled;
+  setSimulationMode(isEnabled) {
+    this.isSimulationMode = isEnabled;
   }
 }
 
