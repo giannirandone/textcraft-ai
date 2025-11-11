@@ -19,6 +19,41 @@ class TextCraftApp {
     this.setupEventListeners();
     this.updateCharCount();
     this.updateProcessButton();
+    this.initTypingEffect();
+  }
+
+  initTypingEffect() {
+    const subtitleElement = document.getElementById('subtitleText');
+    const subtitleContent = document.getElementById('subtitleContent');
+    const cursorElement = subtitleElement?.querySelector('.typing-cursor');
+    
+    if (!subtitleElement || !subtitleContent) return;
+
+    const fullText = subtitleElement.getAttribute('data-text') || '';
+    let currentIndex = 0;
+    const typingSpeed = 80; // milliseconds per character
+    const pauseAfterTyping = 2000; // pause before cursor starts blinking continuously
+
+    const typeNextChar = () => {
+      if (currentIndex < fullText.length) {
+        subtitleContent.textContent = fullText.substring(0, currentIndex + 1);
+        currentIndex++;
+        setTimeout(typeNextChar, typingSpeed);
+      } else {
+        // Typing complete, cursor will continue blinking via CSS animation
+        setTimeout(() => {
+          if (cursorElement) {
+            cursorElement.style.animation = 'cursor-blink 1s infinite';
+          }
+        }, pauseAfterTyping);
+      }
+    };
+
+    // Start typing effect after a short delay
+    setTimeout(() => {
+      subtitleContent.textContent = '';
+      typeNextChar();
+    }, 500);
   }
 
   setupEventListeners() {
