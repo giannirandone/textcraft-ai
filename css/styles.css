@@ -230,6 +230,10 @@ body {
   margin-right: auto;
   text-align: center;
   display: block;
+  transition: transform 0.3s ease-out;
+  line-height: 1.2;
+  padding-top: var(--spacing-xs);
+  padding-bottom: var(--spacing-xs);
 }
 
 .subtitle {
@@ -289,8 +293,7 @@ body {
   position: relative;
   display: inline-block;
   animation: glitch-flicker 4s infinite;
-  text-shadow: 
-    0.05em 0 0 rgba(255, 0, 0, 0.48),
+  text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.48),
     -0.05em -0.025em 0 rgba(0, 255, 255, 0.48),
     0.025em 0.05em 0 rgba(0, 255, 0, 0.48);
   min-height: 1.5em;
@@ -319,10 +322,12 @@ body {
 }
 
 @keyframes cursor-blink {
-  0%, 45% {
+  0%,
+  45% {
     opacity: 1;
   }
-  46%, 100% {
+  46%,
+  100% {
     opacity: 0;
   }
 }
@@ -343,24 +348,21 @@ body {
 
 .glitch-text::before {
   left: 1px;
-  text-shadow: 
-    -1px 0 rgba(255, 0, 0, 0.54),
-    1px 1px rgba(0, 255, 255, 0.54);
+  text-shadow: -1px 0 rgba(255, 0, 0, 0.54), 1px 1px rgba(0, 255, 255, 0.54);
   clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
   animation: glitch-before-subtle 4s infinite;
 }
 
 .glitch-text::after {
   left: -1px;
-  text-shadow: 
-    1px 0 rgba(0, 255, 255, 0.54),
-    -1px -1px rgba(255, 0, 0, 0.54);
+  text-shadow: 1px 0 rgba(0, 255, 255, 0.54), -1px -1px rgba(255, 0, 0, 0.54);
   clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   animation: glitch-after-subtle 4s infinite;
 }
 
 @keyframes glitch-flicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: translate(0);
     filter: hue-rotate(0deg);
@@ -531,7 +533,8 @@ body {
 }
 
 @keyframes glitch-before-subtle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: translate(0);
   }
@@ -582,7 +585,8 @@ body {
 }
 
 @keyframes glitch-after-subtle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: translate(0);
   }
