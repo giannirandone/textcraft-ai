@@ -19,6 +19,17 @@ export const CONFIG = {
             PROCESS_CENTER: 60,
             COPY_ICON: 40,
         },
+        // Typing Effect Configuration
+        TYPING: {
+            SPEED: 80, // milliseconds per character
+            PAUSE_AFTER_TYPING: 2000, // pause before cursor starts blinking continuously
+            INITIAL_DELAY: 500, // delay before typing starts
+        },
+        // Subtitle Animation Configuration
+        SUBTITLE: {
+            SCROLL_CHECK_DELAY: 100, // delay for scroll position check
+            SCROLL_CALC_DELAY: 50, // delay for scroll calculation
+        },
     },
 };
 

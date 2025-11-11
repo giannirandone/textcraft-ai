@@ -27,6 +27,41 @@ export class UIHandler {
     };
   }
 
+  // Subtitle Elements
+  getSubtitleElement() {
+    return document.getElementById("subtitleText");
+  }
+
+  getSubtitleContent() {
+    return document.getElementById("subtitleContent");
+  }
+
+  getCursorElement() {
+    const subtitleElement = this.getSubtitleElement();
+    return subtitleElement?.querySelector(".typing-cursor");
+  }
+
+  // Layout Elements
+  getMainContent() {
+    return document.querySelector(".main-content");
+  }
+
+  getFooter() {
+    return document.querySelector(".footer");
+  }
+
+  getLogo() {
+    return document.querySelector(".logo");
+  }
+
+  getContainer() {
+    return document.querySelector(".container");
+  }
+
+  getOptionsPanel() {
+    return document.querySelector(".options-panel");
+  }
+
   // Character Count Updates
   updateCharCount(characterCount) {
     if (this.elements.inputCharCount) {
