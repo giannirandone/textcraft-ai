@@ -719,7 +719,7 @@ body {
   color: var(--text-primary);
   font-size: var(--spacing-md);
   font-family: inherit;
-  resize: vertical;
+  resize: none;
   transition: border-color var(--transition-normal);
   min-height: 200px;
   box-sizing: border-box;

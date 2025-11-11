@@ -72,7 +72,7 @@ export const SYSTEM_PROMPT = 'Du bist ein professioneller Textoptimierungs-Assis
 export const UI_TEXTS = {
     PLACEHOLDER_INPUT: 'Geben Sie hier Ihren Text ein...',
     PLACEHOLDER_OUTPUT: 'Hier erscheint der optimierte Text...',
-    LOADING_MESSAGE: 'Text wird verarbeitet...',
+    LOADING_MESSAGE: 'Text wird bearbeitet...',
     ERROR_PROCESSING: 'Fehler beim Verarbeiten des Textes. Bitte versuchen Sie es erneut.',
     ERROR_COPY: 'Kopieren fehlgeschlagen. Bitte manuell kopieren.',
     COPY_SUCCESS: 'Kopiert!',
