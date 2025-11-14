@@ -820,6 +820,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.tab-btn .icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .tab-btn-icon {
@@ -832,6 +840,13 @@ body {
   justify-content: center;
   font-size: 1.25rem;
   flex: 0 0 44px;
+}
+
+.tab-btn-icon .icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .tab-btn:hover {
@@ -959,6 +974,9 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
 }
 
 /* ============================================
@@ -985,6 +1003,12 @@ body {
   justify-content: center;
   z-index: var(--z-overlay);
   box-shadow: var(--shadow);
+}
+
+.copy-btn-icon .icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
 }
 
 .copy-btn-icon:hover:not(:disabled) {
@@ -1099,6 +1123,16 @@ body {
   transition: transform 0.3s ease-out;
 }
 
+.footer-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 2px;
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+}
+
 /* ============================================
    LOADING OVERLAY
    ============================================ */
@@ -1182,6 +1216,29 @@ body {
   }
 }
 
+@media (max-width: 650px) {
+  /* Text-Verarbeitungsbuttons: Nur Icon anzeigen */
+  .tab-section:first-of-type .tab-btn {
+    min-width: 44px;
+    width: 44px;
+    padding: 0;
+    flex: 0 0 44px;
+    font-size: 0;
+    line-height: 0;
+    gap: 0;
+    overflow: hidden;
+    text-indent: -9999px;
+  }
+
+  .tab-section:first-of-type .tab-btn .icon {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    position: relative;
+    text-indent: 0;
+  }
+}
+
 @media (max-width: 520px) {
   .tab-buttons {
     flex-direction: column;
@@ -1197,5 +1254,23 @@ body {
   .tab-btn-icon {
     width: 100%;
     min-width: 0;
+  }
+
+  /* Bei sehr kleinen Bildschirmen: Text wieder anzeigen */
+  .tab-section:first-of-type .tab-btn {
+    min-width: 100px;
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    flex: 1 1 auto;
+    font-size: 0.875rem;
+    line-height: normal;
+    gap: var(--spacing-xs);
+    overflow: visible;
+    text-indent: 0;
+  }
+
+  .tab-section:first-of-type .tab-btn .icon {
+    width: 18px;
+    height: 18px;
   }
 }
